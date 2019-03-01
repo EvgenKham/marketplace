@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %} Регистрация {% endblock title %}
+
+{% block content %}
+    <h3 class="text-center">Регистрация нового пользователя</h3>
+    <hr>
+    <div class="col-sm-6 col-sm-offset-3">
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ user_form|crispy }}
+            <input type="submit" class="btn btn-success btn-block" value="Зарегистрироваться" />
+        </form>
+{#    {% if user_form.name.errors%}#}
+{#        <p class="error">Логин с данным именем уже существует</p>#}
+{#    {% elif user_form.email.errors %}#}
+{#        <p class="error">Логин с данным именем уже существует</p>#}
+{#    {% endif %}#}
+    </div>
+
+{% endblock content %}

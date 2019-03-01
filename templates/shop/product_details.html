@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block categories %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Категории <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            {% for category in all %}
+                <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endblock categories %}
+{% block title %} {{ product.name}} {% endblock title %}
+{% block content %}
+
+    <div class="col-sm-4">
+        <img src="{{ product.icon.url }}" alt="image phone" style="width: 80%; height: 80%" >
+    </div>
+
+    <div class="col-sm-8">
+        <h3 class="text-center">{{ product.name }}</h3>
+        <p> {% lorem 2 b random %} </p>
+        <hr>
+        <h4 class="text-left">Основные характеристики</h4>
+        <ul style="color: black">
+            <li>Продавец: {{ product.user }}</li>
+            <li>Описание: {{ product.description }}  </li>
+            <li>Цена: {{ product.price }} кр.</li>
+        </ul>
+{#        {% if request.user.is_authenticated %}#}
+            <form action="#" method="post" >
+{#                {{ cart_product_form.quantity }}#}
+{#                {% csrf_token %}#}
+                    <input type="submit" class="btn btn-danger" value="Добавить в карзину">
+            </form>
+{#        {% else %}#}
+{#            <p class="text-center">Заказать товар могут только авторизированые пользователи.#}
+{#                Пожалуйста, <a href="{% url 'login' %}">войдите </a> или <a href="{% url 'register' %}"> зарегистрируйтесь</a></p>#}
+{#        {% endif %}#}
+    </div>
+
+{% endblock content %}

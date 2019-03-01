@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %} Авторизация {% endblock title %}
+
+{% block content %}
+    <h3 class="text-center">Авторизация</h3>
+    <hr>
+    <div class="col-sm-4 col-sm-offset-4">
+        <form method="post" action="">
+            {% csrf_token %}
+            {{ login_form|crispy }}
+            <input type="submit" class="btn btn-success btn-block" value="Войти"/>
+        </form>
+
+    {% if form.error %}
+        <p class="error">Сожалеем, вы не правильно ввели логин или пароль</p>
+    {% endif %}
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}EvgenShop.by{% endblock title %}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel='stylesheet' href='{% static "css/bootstrap.css" %}' />
+
+    <!-- Custom CSS -->
+    <link rel='stylesheet' href='{% static "css/shop-homepage.css" %}'/>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Главная</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                {% block categories %}
+{#                    {% if not request.get_full_path == '/' %}#}
+{#                    <li class="dropdown">#}
+{#                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+{#                            Категории <span class="caret"></span></a>#}
+{#                        <ul class="dropdown-menu">#}
+{#                            {% for category in categories %}#}
+{#                                <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>#}
+{#                            {% endfor %}#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                    {% endif %}#}
+                {% endblock categories %}
+                </ul>
+
+                <ul class="nav navbar-nav navbar">
+                {% if not request.user.is_authenticated %}
+                        <ul class="nav navbar-nav">
+                            <li><a class="navbar-link" href="{% url 'login' %}" role="button">Войти</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a>Здравствуйте, гость </a></li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav navbar-nav">
+                            <li><a class="navbar-link" href="{% url 'logout' %}" role="button">Выйти</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li><a>Здравствуйте, {{ request.user.username }} </a></li>
+                        </ul>
+                    {% endif %}
+                </ul>
+
+
+{#                {% if request.user.is_authenticated %}#}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Корзина<span class="badge">{{ cart.item_count }}</span></a></li>
+                    </ul>
+{#                {% endif %}#}
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        {% block content %}
+        <div class="row">
+
+            <div class="col-md-3">
+                <p class="lead">EvgenShop</p>
+                <div class="list-group" >
+                    {% for category in categories %}
+                    <a href="{{ category.get_absolute_url }}" class="list-group-item" >{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <div class="row carousel-holder">
+
+                    <div class="col-md-12">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for product in products %}
+                                    {% if forloop.first %}
+                                        <div class="item active">
+                                            <img class="slide-image" src="{{ product.icon.url }}"  alt=""
+                                                 style="padding-left: 350px; padding-right: 350px; height: 260px">
+                                            <p class="text-center"><a href="{{ product.get_absolute_url }}">
+                                                <button class="btn btn-primary">{{ product.name }}</button></a></p>
+                                        </div>
+                                    {% else %}
+                                        <div class="item">
+                                            <img class="slide-image" src="{{ product.icon.url }}" alt=""
+                                                 style="padding-left: 310px; padding-right: 310px; height: 260px">
+                                            <p class="text-center"><a href="{{ product.get_absolute_url }}">
+                                                <button class="btn btn-primary">{{ product.name }}</button></a></p>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev" style="background: transparent">
+                                <span class="glyphicon glyphicon-chevron-left" style="color: black"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next" style="background: transparent">
+                                <span class="glyphicon glyphicon-chevron-right" style="color: black"></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+
+                <div class="row" >
+
+                    {% for item in products %}
+                        {% if forloop.counter0 < 3  %}
+
+                        <div class="col-sm-4 col-lg-4 col-md-4">
+                            <div class="thumbnail">
+                                <img src="{{ item.icon.url }}" alt="" style="width: 40%; height: 40%" >
+                                <div class="caption">
+                                    <h4 class="pull-right">{{ item.price }} кр.</h4>
+                                    <h5><strong><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></strong></h5>
+                                    <h6>{{ item.description }}</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+{#            {% if not request.user.is_authenticated %}#}
+            <p class="text-center">Заказать товар могут только авторизированые пользователи.
+                Пожалуйста, <a href="{% url 'login' %}">войдите </a> или <a href="{% url 'register' %}"> зарегистрируйтесь</a></p>
+{#            {% endif %}#}
+        </div>
+    {% endblock content %}
+    </div>
+    <!-- /.container -->
+
+    <div class="container">
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Website {% now "Y" %}</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="{% static "js/jquery.js" %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+
+</body>
+
+</html>
