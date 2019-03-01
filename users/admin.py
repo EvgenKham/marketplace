@@ -4,7 +4,7 @@ from users.models import Profile
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = [
-        'name',
+        # 'name',
         'photo',
         'account'
     ]

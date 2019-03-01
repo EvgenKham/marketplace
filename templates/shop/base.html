@@ -57,7 +57,7 @@
                 <ul class="nav navbar-nav navbar">
                 {% if not request.user.is_authenticated %}
                         <ul class="nav navbar-nav">
-                            <li><a class="navbar-link" href="{% url 'login' %}" role="button">Войти</a></li>
+                            <li><a class="navbar-link" href="{% url 'login' %}" role="button">Вход</a></li>
                         </ul>
                         <ul class="nav navbar-nav">
                             <li><a>Здравствуйте, гость </a></li>
@@ -73,11 +73,11 @@
                 </ul>
 
 
-{#                {% if request.user.is_authenticated %}#}
+                {% if request.user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">Корзина<span class="badge">{{ cart.item_count }}</span></a></li>
                     </ul>
-{#                {% endif %}#}
+                {% endif %}
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -156,10 +156,10 @@
 
                 </div>
             </div>
-{#            {% if not request.user.is_authenticated %}#}
+            {% if not request.user.is_authenticated %}
             <p class="text-center">Заказать товар могут только авторизированые пользователи.
                 Пожалуйста, <a href="{% url 'login' %}">войдите </a> или <a href="{% url 'register' %}"> зарегистрируйтесь</a></p>
-{#            {% endif %}#}
+            {% endif %}
         </div>
     {% endblock content %}
     </div>

@@ -9,10 +9,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 
-from users.forms import ProfileRegisterForm, LoginForm, ProfileEditForm
+from users.forms import UserRegisterForm, ProfileRegisterForm, LoginForm, ProfileEditForm
 
 from users.models import Profile
-from users.authentication import EmailAuthBackend
 
 
 class LogoutView(View):
@@ -23,55 +22,42 @@ class LogoutView(View):
         pass
 
 
-# class LoginFormView(FormView):
-#     """Класс для авторизации пользователей"""
-#     form_class = AuthenticationForm
-#     template_name = "login.html"
-#     success_url = "/"
-#
-#     def form_valid(self, form):
-#         self.user = form.get_user()
-#         login(self.request, self.user)
-#         return super(LoginFormView, self).form_valid(form)
-#         pass
-
-
 def login_view(request):
-    form = LoginForm(request.POST)
-    if form.is_valid():
-        name = form.cleaned_data['name']
-        email = form.cleaned_data['email']
-        login_user = authenticate(username=name, email=email)
-        if login_user:
-            # login(request, login_user)
-            return redirect('/')
-    return render(request, 'login.html', {'login_form': form})
-
-
-# class UserRegistrationForm(FormView):
-#     """Класс для регистрации новых пользователей"""
-#     form_class = UserRegisterForm
-#     template_name = "register.html"
-#     success_url = "/user/login/"
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return super(UserRegistrationForm, self).form_valid(form)
-#         pass
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect('index')
+        return render(request, 'login.html', {'form': form})
+    else:
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
 
 
 def register(request):
+    """
+    Форма регистрации является составной(UserRegisterForm и ProfileRegisterForm).
+    По-этому после валидации сохраняется User, а только потом создается Profile
+    """
     if request.method == 'POST':
-        form = ProfileRegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
+        user_form = UserRegisterForm(request.POST)
+        profile_form = ProfileRegisterForm(request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.save()
+            profile = Profile.objects.create(user=new_user)
+            profile.status = profile_form.cleaned_data['status']
+            profile.save()
             return redirect('/user/login/')
-        # else:
-        #     form = ProfileRegisterForm()
-        return render(request, 'register.html', {'user_form': form})
+        return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
     else:
-        form = ProfileRegisterForm()
-        return render(request, 'register.html', {'user_form': form})
+        user_form = UserRegisterForm()
+        profile_form = ProfileRegisterForm()
+        return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 @login_required

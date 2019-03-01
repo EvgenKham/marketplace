@@ -10,13 +10,9 @@
         <form method="post" action="">
             {% csrf_token %}
             {{ user_form|crispy }}
+            {{ profile_form|crispy }}
             <input type="submit" class="btn btn-success btn-block" value="Зарегистрироваться" />
         </form>
-{#    {% if user_form.name.errors%}#}
-{#        <p class="error">Логин с данным именем уже существует</p>#}
-{#    {% elif user_form.email.errors %}#}
-{#        <p class="error">Логин с данным именем уже существует</p>#}
-{#    {% endif %}#}
     </div>
 
 {% endblock content %}
