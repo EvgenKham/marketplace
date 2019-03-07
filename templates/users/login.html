@@ -3,6 +3,12 @@
 {% load crispy_forms_tags %}
 {% block title %} Авторизация {% endblock title %}
 
+{% block account %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a class="navbar-link" href="{% url 'users:register' %}" role="button">Регистрация</a></li>
+    </ul>
+{% endblock account %}
+
 {% block content %}
     <h3 class="text-center">Авторизация</h3>
     <hr>
@@ -10,8 +16,7 @@
         <form method="post" action="">
             {% csrf_token %}
             {{ form|crispy }}
-            <input type="submit" class="btn btn-success btn-block" value="Войти"/>
+            <input type="submit" class="btn btn-success btn-block" value="Войти">
         </form>
     </div>
-
 {% endblock content %}

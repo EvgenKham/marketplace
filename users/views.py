@@ -1,8 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
 
+from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,6 +11,8 @@ from django.shortcuts import render, redirect, reverse
 from users.forms import UserRegisterForm, ProfileRegisterForm, LoginForm, ProfileEditForm
 
 from users.models import Profile
+from cart.models import Cart
+from orders.models import Order
 
 
 class LogoutView(View):
@@ -38,7 +39,7 @@ def login_view(request):
         return render(request, 'login.html', {'form': form})
 
 
-def register(request):
+def register_view(request):
     """
     Форма регистрации является составной(UserRegisterForm и ProfileRegisterForm).
     По-этому после валидации сохраняется User, а только потом создается Profile
@@ -60,19 +61,25 @@ def register(request):
         return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
-@login_required
-def edit(request):
-    if request.method == 'POST':
-        profile_form = ProfileEditForm(data=request.POST, instance=request.user.profile)
-        if profile_form.is_valid():
-            profile_form.save()
-            messages.success(request, 'Ваш профиль был успешно обновлен!')
-            # return redirect('settings:profile')
-        else:
-            messages.error(request, 'Пожалуйста, исправьте ошибки.')
-    else:
-        profile_form = ProfileEditForm(instance=request.user.profile)
-        return render(request,
-                      'users/edit.html',
-                      {'profile_form': profile_form})
+# @login_required
+# def edit_view(request):
+#     if request.method == 'POST':
+#         profile_form = ProfileEditForm(data=request.POST, instance=request.user.profile)
+#         if profile_form.is_valid():
+#             profile_form.save()
+#             messages.success(request, 'Ваш профиль был успешно обновлен!')
+#             # return redirect('settings:profile')
+#         else:
+#             messages.error(request, 'Пожалуйста, исправьте ошибки.')
+#     else:
+#         profile_form = ProfileEditForm(instance=request.user.profile)
+#         return render(request,
+#                       'users/edit.html',
+#                       {'profile_form': profile_form})
 
+
+def account_view(request):
+    user = User.objects.get(username=request.user)
+    cart = Cart(request)
+    # order = Order.objects.filter(user=request.user)
+    return render(request, 'account.html', {'user': user, 'cart': cart})

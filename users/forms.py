@@ -6,27 +6,22 @@ from users.models import Profile
 status = (('Customer', 'Покупатель'), ('Seller', 'Продавец'), ('Customer/Seller', 'Покупатель/Продавец'))
 
 
-class ProfileEditForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ('photo', )
-
-
 class UserRegisterForm(forms.ModelForm):
     password_check = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = User
         fields = ['username', 'password', 'password_check', 'email']
-
-    def __init__(self, *args, **kwargs):
-        super(UserRegisterForm, self).__init__(*args, *kwargs)
-        self.fields['username'].label = 'Логин'
-        self.fields['password'].label = 'Пароль'
-        self.fields['password'].help_text = 'Придумайте пароль'
-        self.fields['password_check'].label = 'Повторите пароль'
-        self.fields['email'].label = 'Эл. почта'
-        self.fields['email'].help_text = 'Указывайте реальную почту'
+        labels = {
+            'username': 'Логин',
+            'password': 'Пароль',
+            'password_check': 'Повторите пароль',
+            'email': 'Эл. почта'
+        }
+        help_texts = {
+            'password': 'Придумайте пароль',
+            'email': 'Указывайте реальную почту'
+        }
 
     def save(self, commit=True):
         """
@@ -40,7 +35,6 @@ class UserRegisterForm(forms.ModelForm):
         return user
 
     def clean(self):
-        """Лучше каждую проверку определить в отдельный метод(single responsibility principle)"""
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
         password_check = self.cleaned_data['password_check']
@@ -51,6 +45,31 @@ class UserRegisterForm(forms.ModelForm):
             raise forms.ValidationError('Ваши пароли не совпадают!')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('Пользователь с данной почтой уже существует!')
+
+    # """
+    # Альтернатива общему методу clean() методы clean_<fieldname>.
+    # clean_password - не работает(self.cleaned_data.get('password_check') возвращает None)
+    # В clean_<fieldname> сообщения выводяться под полем с ошибкой и все имеющиеся,
+    # а в clean - вверху формы и по одному
+    # """
+    # def clean_username(self):
+    #     username = self.cleaned_data.get('username')
+    #     if User.objects.filter(username=username).exists():
+    #         raise forms.ValidationError('Имя пользователя уже занято!')
+    #     return username
+    #
+    # def clean_password(self):
+    #     password = self.cleaned_data.get('password')
+    #     password_check = self.cleaned_data.get('password_check')
+    #     if password != password_check:
+    #         raise forms.ValidationError('Ваши пароли не совпадают!')
+    #     return password
+    #
+    # def clean_email(self):
+    #     email = self.cleaned_data.get('email')
+    #     if User.objects.filter(email=email).exists():
+    #         raise forms.ValidationError('Пользователь с данной почтой уже существует!')
+    #     return email
 
 
 class ProfileRegisterForm(forms.ModelForm):
@@ -78,3 +97,9 @@ class LoginForm(forms.Form):
         user = User.objects.get(username=username)
         if user and not user.check_password(password):
             raise forms.ValidationError('Неверный пароль! Попробуйте снова.')
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('photo', )

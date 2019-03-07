@@ -2,6 +2,13 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 {% block title %} Регистрация {% endblock title %}
+{% block categories %}{% endblock categories %}
+
+{% block account %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a class="navbar-link" href="{% url 'users:login' %}" role="button">Авторизация</a></li>
+    </ul>
+{% endblock account %}
 
 {% block content %}
     <h3 class="text-center">Регистрация нового пользователя</h3>

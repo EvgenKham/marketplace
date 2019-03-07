@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block categories %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Категории <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            {% for category in cat_all %}
+                <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endblock categories %}
+
+{% block content %}
+    <div class="text-center ">
+    <h1 class="text-center">Корзина товаров</h1>
+    <br>
+        {% if cart.item_count > 0 %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Изображение</th>
+                        <th>Продукт</th>
+                        <th>Кол-во</th>
+                        <th>Удалить</th>
+                        <th>Цена</th>
+                        <th>Полная цена</th>
+                    </tr>
+                </thead>
+                <tbody class="text-left">
+                {% for item in cart %}
+                    {% with product=item.product %}
+                        <tr>
+                        <td>
+                            <a href="{{ product.get_absolute_url }}">
+                                <img src="{{ product.icon.url }}" alt="" style="max-width: 40px"> </img>
+                            </a>
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ item.quantity }} шт.</td>
+                        <td><a href="{% url "cart:CartRemove" product.id %}">Удалить</a></td>
+                        <td class="number">{{ item.price }} кр.</td>
+                        <td class="number">{{ item.total_price }} кр.</td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+                    <tr class="total">
+                        <td>Всего цена: </td>
+                        <td colspan="4"></td>
+                        <td class="number">{{ cart.get_total_price }} кр.</td>
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <h2 class="text-center">Ваша корзина пуста</h2>
+        {% endif %}
+    </div>
+
+    <div>
+     <p class="text-left cart_options">
+            <a href="{% url "index" %}" class="btn btn-primary">Продолжить шопинг</a>
+         {% if cart.get_total_price < user.account and cart.item_count > 0%}
+             <a href="{% url "orders:buy_product" %}"  class="btn btn-primary">Оплатить</a>
+     </p>
+         {% elif cart.item_count == 0%}
+             <p style="color: orange"> Чтобы приобрести товар довавьте его в корзину!)</p>
+         {% else %}
+            <p style="color: red"> Слишком мало средств!
+                Для оформления заказа общая цена заказа не должна превышать {{ user.account }} кредит(-ов)</p>
+        {% endif %}
+
+    </div>
+
+{% endblock content %}

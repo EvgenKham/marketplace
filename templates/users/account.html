@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Account{% endblock title %}
+{% block categories %}{% endblock categories %}
+
+{% block account %}
+    <ul class="nav navbar-nav">
+        <li><a class="navbar-link" href="{% url 'users:logout' %}" role="button">Выход</a></li>
+    </ul>
+     <ul class="nav navbar-nav navbar-right">
+         <li><a href="{% url 'cart:CartDetail' %}">Корзина<span class="badge">{{ cart.get_total_price }}</span></a></li>
+     </ul>
+{% endblock account %}
+
+{% block content %}
+    <h3 class="text-center">Личный кабинет пользователя: {{ user }}</h3>
+    <div class="col-md-offset-9">
+        <ul class="text-leftt">
+            <li><a href="#" >Редактировать профиль</a></li>
+            <li><a href="{% url 'add_product' %}">Добавить товар</a></li>
+        </ul>
+    </div>
+
+    <div class="col-sm-4">
+        <img src="{{ user.profile.photo }}" alt="image phone" style="width: 80%; height: 80%" >
+    </div>
+
+    <div class="col-md-offset-4">
+        <ul class="list-group-item-text">
+            <li>Имя пользователя: {{ user.username }}</li>
+            <li>Эл. почта: {{ user.email }}</li>
+            <li>Статус: {{ user.profile.status }}</li>
+            <li>Баланс: {{ user.profile.account }}</li>
+            <li>Дата регистрации: {{ user.date_joined|date:"SHORT_DATE_FORMAT" }}</li>
+        </ul>
+    </div>
+{% endblock content %}
