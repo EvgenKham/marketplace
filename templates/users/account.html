@@ -13,24 +13,54 @@
 
 {% block content %}
     <h3 class="text-center">Личный кабинет пользователя: {{ user }}</h3>
-    <div class="col-md-offset-9">
-        <ul class="text-leftt">
-            <li><a href="#" >Редактировать профиль</a></li>
-            <li><a href="{% url 'add_product' %}">Добавить товар</a></li>
-        </ul>
-    </div>
 
-    <div class="col-sm-4">
-        <img src="{{ user.profile.photo }}" alt="image phone" style="width: 80%; height: 80%" >
+    <div class="container col-sm-4">
+        <img src="{{ user.profile.photo.url }}" alt="avatar profile" style="width: 40%; height: 40%" >
     </div>
 
     <div class="col-md-offset-4">
         <ul class="list-group-item-text">
             <li>Имя пользователя: {{ user.username }}</li>
+            {% if user.first_name %} <li>Имя: {{ user.first_name }}</li> {% endif %}
+            {% if user.last_name %}  <li>Имя: {{ user.last_name }}</li>  {% endif %}
             <li>Эл. почта: {{ user.email }}</li>
-            <li>Статус: {{ user.profile.status }}</li>
             <li>Баланс: {{ user.profile.account }}</li>
             <li>Дата регистрации: {{ user.date_joined|date:"SHORT_DATE_FORMAT" }}</li>
         </ul>
+
+        <p><a class="btn btn-dark" href="{% url 'users:edit' %}">Изменить профиль</a></p>
     </div>
+
+    <div class="col-md-offset-10">
+        <p><a class="btn btn-primary" href="{% url 'add_product' %}">Добавить товар</a> </p>
+        <p><a class="btn btn-primary" href="#">Редактировать товар</a></p>
+        <p><a class="btn btn-danger" href="#">Удалить товар</a></p>
+    </div>
+
+    <div class="history orders col-sm-7">
+        <table class="table">
+        <caption class="text-center">Последний заказ</caption>
+                <thead>
+                    <tr>
+                        <th>Заказ №</th>
+                        <th>Дата</th>
+                        <th>Название товара</th>
+                        <th>Количество</th>
+                        <th>Цена за ед. товара</th>
+                    </tr>
+                </thead>
+                <tbody class="text-left">
+                    {% for item in order_items %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.created }}</td>
+                        <td>{{ item.product }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+
 {% endblock content %}

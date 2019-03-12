@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}Edit_account{% endblock title %}
+
+{% block content %}
+    <h3 class="text-center">Редактирование профиля</h3>
+    <hr>
+    <div class="col-sm-4 col-sm-offset-4">
+        <form enctype="multipart/form-data" method="post" action="">
+            {% csrf_token %}
+            {{ user_form|crispy }}
+            {{ profile_form|crispy }}
+            <input type="submit" class="btn btn-danger btn-block" value="Сохранить">
+        </form>
+    </div>
+{% endblock content %}

@@ -23,13 +23,9 @@ class CreateProductForm(forms.ModelForm):
         category = self.cleaned_data.get('category')
         name = self.cleaned_data.get('name')
         price = self.cleaned_data.get('price')
-        icon = self.cleaned_data.get('icon')
         if not Category.objects.filter(name=category).exists():
             raise forms.ValidationError('Товар должен относиться к одной из имеющихся категорий')
         if Product.objects.filter(name=name).exists():
             raise forms.ValidationError('Товар с таким название уже размещен на торговой площадке')
         if price > 100.0:
             raise forms.ValidationError('Товар не может стоить больше 100 кредитов')
-        # if icon == '':
-        #     raise forms.ValidationError('')
-

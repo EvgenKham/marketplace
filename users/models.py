@@ -7,7 +7,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, default="0000000")
     photo = models.ImageField(verbose_name='Фото', upload_to='photos/%Y_%m/%d', blank=True,
                               default='photos/default_user.jpg')
-    status = models.CharField(max_length=32, verbose_name='Статус')
     account = models.DecimalField(verbose_name='Счет', max_digits=10, decimal_places=2, default=100.00, blank=True)
 
     class Meta:

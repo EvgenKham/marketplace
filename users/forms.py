@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 
 from users.models import Profile
 
-status = (('Customer', 'Покупатель'), ('Seller', 'Продавец'), ('Customer/Seller', 'Покупатель/Продавец'))
-
 
 class UserRegisterForm(forms.ModelForm):
     password_check = forms.CharField(widget=forms.PasswordInput)
@@ -73,11 +71,12 @@ class UserRegisterForm(forms.ModelForm):
 
 
 class ProfileRegisterForm(forms.ModelForm):
-    status = forms.TypedChoiceField(label='Статус пользователя', choices=status)
 
     class Meta:
         model = Profile
-        fields = ['status']
+        fields = ['photo']
+        labels = {'photo': 'Ваше фото'}
+        help_texts = {'photo': 'Фото пользователя способсвует лучшим продажам'}
 
 
 class LoginForm(forms.Form):
@@ -99,7 +98,20 @@ class LoginForm(forms.Form):
             raise forms.ValidationError('Неверный пароль! Попробуйте снова.')
 
 
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        labels = {
+            'username': 'Логин',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'email': 'Эл. почта'
+        }
+
+
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('photo', )
+

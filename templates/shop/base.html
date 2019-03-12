@@ -146,18 +146,25 @@
 
                 <div class="row" >
 
+                {% for cat in categories %}
                     {% for item in products %}
-                        <div class="col-sm-4 col-lg-4 col-md-4">
-                            <div class="thumbnail">
-                                <img src="{{ item.icon.url }}" alt="" style="width: 30%; height: 30%" >
-                                <div class="caption">
-                                    <h4 class="pull-right">{{ item.price }} кр.</h4>
-                                    <h5><strong><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></strong></h5>
-                                    <h6>{{ item.description }}</h6>
+                        {% if cat.id == item.category_id %}
+
+                            <div class="col-sm-4 col-lg-4 col-md-4">
+                                <div class="thumbnail">
+                                    <img src="{{ item.icon.url }}" alt="" style="width: 30%; height: 30%" >
+                                    <div class="caption">
+                                        <h4 class="pull-right">{{ item.price }} кр.</h4>
+                                        <h5><strong><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></strong></h5>
+                                        <h6>{{ item.description }}</h6>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                        {% endif %}
                     {% endfor %}
+                {% endfor %}
+
                 </div>
             </div>
         </div>
